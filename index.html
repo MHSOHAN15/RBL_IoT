@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Analog Sensor Monitoring</title>
+    <center> <title>Analog Sensor Monitoring</title> </center>
     <style>
         table {
             border-collapse: collapse;
@@ -24,36 +24,40 @@
         <thead>
             <tr>
                 <th>Sensor</th>
-                <th>Value</th>
+                <th>Voltage</th>
+                <th>Battery Percentage</th>
             </tr>
         </thead>
         <tbody id="sensorData">
-            <!-- Data from ESP8266 devices will be displayed here -->
+            <!-- Data from ESP32 devices will be displayed here -->
         </tbody>
     </table>
 
     <script>
         // Function to update the sensor data on the webpage
-        function updateSensorData(sensor, value) {
+        function updateSensorData(sensor, voltage, batteryPercentage) {
             const tableRow = document.createElement('tr');
             tableRow.innerHTML = `
                 <td>Sensor ${sensor}</td>
-                <td>${value}</td>
+                <td>${voltage.toFixed(2)}</td>
+                <td>${batteryPercentage}</td>
             `;
             document.getElementById('sensorData').appendChild(tableRow);
         }
 
-        // Simulating sensor data from 5 ESP8266 devices (random values between 0 and 1023)
-        function simulateSensorData() {
-            for (let i = 1; i <= 5; i++) {
-                const sensorValue = Math.floor(Math.random() * 1024);
-                updateSensorData(i, sensorValue);
-            }
+        // Function to receive data from the ESP32
+        function receiveDataFromESP32() {
+            fetch('data.json') // Assume data.json is the file where ESP32 sends the data
+                .then(response => response.json())
+                .then(data => {
+                    const { sensor, voltage, batteryPercentage } = data;
+                    updateSensorData(sensor, voltage, batteryPercentage);
+                })
+                .catch(error => console.error('Error fetching data:', error));
         }
 
-        // Call the simulation function initially and every 5 seconds
-        simulateSensorData();
-        setInterval(simulateSensorData, 5000);
+        // Call the receiveDataFromESP32 function every 5 seconds to get updated data
+        setInterval(receiveDataFromESP32, 5000);
     </script>
 </body>
 </html>
