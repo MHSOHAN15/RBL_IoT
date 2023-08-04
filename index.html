@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analog Sensor Monitoring</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Analog Sensor Monitoring</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Sensor</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody id="sensorData">
+            <!-- Data from ESP8266 devices will be displayed here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to update the sensor data on the webpage
+        function updateSensorData(sensor, value) {
+            const tableRow = document.createElement('tr');
+            tableRow.innerHTML = `
+                <td>Sensor ${sensor}</td>
+                <td>${value}</td>
+            `;
+            document.getElementById('sensorData').appendChild(tableRow);
+        }
+
+        // Simulating sensor data from 5 ESP8266 devices (random values between 0 and 1023)
+        function simulateSensorData() {
+            for (let i = 1; i <= 5; i++) {
+                const sensorValue = Math.floor(Math.random() * 1024);
+                updateSensorData(i, sensorValue);
+            }
+        }
+
+        // Call the simulation function initially and every 5 seconds
+        simulateSensorData();
+        setInterval(simulateSensorData, 5000);
+    </script>
+</body>
+</html>
