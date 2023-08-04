@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <center> <title>Analog Sensor Monitoring</title> </center>
+    <title>Analog Sensor Monitoring</title>
     <style>
         table {
             border-collapse: collapse;
@@ -24,12 +24,12 @@
         <thead>
             <tr>
                 <th>Sensor</th>
-                <th>Voltage</th>
-                <th>Battery Percentage</th>
+                <th>Voltage (V)</th>
+                <th>Battery Percentage (%)</th>
             </tr>
         </thead>
         <tbody id="sensorData">
-            <!-- Data from ESP32 devices will be displayed here -->
+            <!-- Data from ESP32 will be displayed here -->
         </tbody>
     </table>
 
@@ -39,25 +39,26 @@
             const tableRow = document.createElement('tr');
             tableRow.innerHTML = `
                 <td>Sensor ${sensor}</td>
-                <td>${voltage.toFixed(2)}</td>
+                <td>${voltage}</td>
                 <td>${batteryPercentage}</td>
             `;
             document.getElementById('sensorData').appendChild(tableRow);
         }
 
-        // Function to receive data from the ESP32
-        function receiveDataFromESP32() {
-            fetch('data.json') // Assume data.json is the file where ESP32 sends the data
-                .then(response => response.json())
-                .then(data => {
-                    const { sensor, voltage, batteryPercentage } = data;
-                    updateSensorData(sensor, voltage, batteryPercentage);
-                })
-                .catch(error => console.error('Error fetching data:', error));
+        // Function to fetch data from the ESP32
+        async function fetchSensorData() {
+            try {
+                const response = await fetch('https://mhsohan15.github.io/RBL_IoT/data.json');
+                const data = await response.json();
+                updateSensorData(data.sensor, data.voltage, data.batteryPercentage);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
 
-        // Call the receiveDataFromESP32 function every 5 seconds to get updated data
-        setInterval(receiveDataFromESP32, 5000);
+        // Fetch data initially and every 5 seconds
+        fetchSensorData();
+        setInterval(fetchSensorData, 5000);
     </script>
 </body>
 </html>
