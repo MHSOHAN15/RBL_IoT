@@ -25,7 +25,7 @@
             <tr>
                 <th>Sensor</th>
                 <th>Voltage (V)</th>
-                <th>Battery Percentage (%)</th>
+                <th>Battery (%)</th>
             </tr>
         </thead>
         <tbody id="sensorData">
@@ -40,7 +40,7 @@
             tableRow.innerHTML = `
                 <td>Sensor ${sensor}</td>
                 <td>${voltage}</td>
-                <td>${battery%}</td>
+                <td>${batteryPercentage}</td>
             `;
             document.getElementById('sensorData').appendChild(tableRow);
         }
